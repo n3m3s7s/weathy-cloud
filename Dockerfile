@@ -37,15 +37,14 @@ ENV persistent_deps  \
         ca-certificates \
         g++ \
         gettext \
-        git \
         gcc \
         libcurl \
         make \
         mysql-client \
         nginx \
+        openrc \
         php-xml \
-        php-zip \        
-        rsync \
+        php-zip \
         supervisor \
         su-exec \
 		wget
@@ -68,6 +67,12 @@ RUN apk update \
         zip \
     && docker-php-ext-configure zip \
     && docker-php-source delete \
-    && apk del -f .build-dependencies    
+    && apk del -f .build-dependencies
+
+# Override php.ini
+COPY ./.docker/php/conf.d/php.ini /usr/local/etc/php/conf.d/zz-custom.ini
+
+# Configure opcache.ini
+COPY ./.docker/php/conf.d/opcache.ini /usr/local/etc/php/conf.d/zz-opcache.ini
 
 EXPOSE ${PORT}
