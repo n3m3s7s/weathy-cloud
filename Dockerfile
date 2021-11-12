@@ -75,4 +75,41 @@ COPY ./.docker/php/conf.d/php.ini /usr/local/etc/php/conf.d/zz-custom.ini
 # Configure opcache.ini
 COPY ./.docker/php/conf.d/opcache.ini /usr/local/etc/php/conf.d/zz-opcache.ini
 
+RUN sed -i \ 
+    -e "s/;catch_workers_output\s*=\s*yes/catch_workers_output = yes/g" \
+		-e "s/pm.max_children = 5/pm.max_children = 20/g" \
+		-e "s/pm.start_servers = 2/pm.start_servers = 3/g" \
+		-e "s/pm.min_spare_servers = 1/pm.min_spare_servers = 2/g" \
+		-e "s/pm.max_spare_servers = 3/pm.max_spare_servers = 4/g" \
+		-e "s/;pm.max_requests = 500/pm.max_requests = 200/g" \
+		-e "s/;listen.mode = 0660/listen.mode = 0666/g" \
+        -e "s/;request_terminate_timeout = 0/request_terminate_timeout = 600/g" \
+        -e "s/;rlimit_core = 0/rlimit_core = unlimited/g" \
+        -e "s/;rlimit_files = 1024/rlimit_files = 131072/g" \
+		-e "s/^;clear_env = no$/clear_env = no/" \
+		/usr/local/etc/php-fpm.d/www.conf
+
+
+### SETUP NGINX
+# Copy Nginx conf files
+COPY ./.docker/nginx /etc/nginx
+
+RUN mkdir -p /etc/nginx && \
+	mkdir -p /run/nginx && \
+	mkdir -p /var/log/supervisor && \
+	mkdir -p /etc/nginx/ssl/ && \
+	mkdir -p /etc/nginx/vhost.common.d && \
+	mkdir -p /etc/nginx/sites-enabled && \
+    mkdir -p /etc/nginx/sites-available && \
+    rm -rf /etc/nginx/conf.d/default.conf \
+    && rm -rf /var/www/html \
+    && rm -rf /var/www/localhost \
+    && sh -c "envsubst < /etc/nginx/tmpl/template.conf > /etc/nginx/sites-available/default" \
+	&& ln -s /etc/nginx/sites-available/default /etc/nginx/sites-enabled/default
+### EOF NGINX
+
+### SUPERVISOR
+COPY ./.docker/supervisor/supervisord.conf /etc/
+### EOF SUPERVISOR
+        
 EXPOSE ${PORT}
