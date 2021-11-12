@@ -111,5 +111,11 @@ RUN mkdir -p /etc/nginx && \
 ### SUPERVISOR
 COPY ./.docker/supervisor/supervisord.conf /etc/
 ### EOF SUPERVISOR
+
+# Add entrypoint
+COPY ./.docker/entrypoint.sh /opt/entrypoint.sh
+RUN chmod -R +x /opt/*
         
 EXPOSE ${PORT}
+
+CMD ["/opt/entrypoint.sh"]
