@@ -115,6 +115,24 @@ COPY ./.docker/supervisor/supervisord.conf /etc/
 # Add entrypoint
 COPY ./.docker/entrypoint.sh /opt/entrypoint.sh
 RUN chmod -R +x /opt/*
+
+### ACL
+# Use UID and USER 
+RUN set -x \
+    && deluser ${USER} \
+    && addgroup -g 82 www-data \
+    && adduser -D -H -u ${UID} -s /bin/bash ${USER} -G www-data
+### EOF ACL
+
+### BOOT APP
+# Copy all content to /var/www
+COPY . /var/www
+
+WORKDIR /var/www
+# Chown
+RUN chown -R ${USER}:www-data ./* \
+    && chmod -R 0755 ./*
+### EOF BOOT APP
         
 EXPOSE ${PORT}
 
