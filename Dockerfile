@@ -146,7 +146,10 @@ RUN set -xe \
 RUN chown -R ${USER}:www-data ./* \
     && chmod -R 0755 ./* \
     && chmod -R 0775  ./storage \ 
-    && chmod -R 0775  ./bootstrap
+    && chmod -R 0775  ./bootstrap \
+    && php artisan key:generate \ 
+    && php artisan config:cache \
+    && php artisan route:cache
 ### EOF BOOT APP
         
 EXPOSE ${PORT}

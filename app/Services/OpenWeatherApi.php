@@ -126,7 +126,7 @@ abstract class OpenWeatherApi
      * @return array|mixed
      */
     private function callEndpoint()
-    {
+    {        
         $this->response = Http::get($this->getUri());
         $this->response_data = $this->response->json();
         return $this->response_data;
@@ -140,7 +140,7 @@ abstract class OpenWeatherApi
         try {
             return $this->fetch();
         } catch (\Exception $e) {
-
+            logger()->error($e->getMessage());
         }
     }
 
