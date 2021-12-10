@@ -1,5 +1,6 @@
 Dockerfile
 .git
 vendor
+node_modules
 .env
 shared
