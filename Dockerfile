@@ -42,6 +42,8 @@ ENV persistent_deps  \
         make \
         mysql-client \
         nginx \
+        nodejs \ 
+        npm \
         openrc \
         php-xml \
         php-zip \
@@ -129,9 +131,22 @@ RUN set -x \
 COPY . /var/www
 
 WORKDIR /var/www
+
+# Run Composer
+RUN set -xe \
+    && composer install --no-dev --no-scripts --no-suggest --no-interaction --prefer-dist --optimize-autoloader \
+    && npm install \
+    && npm run production \ 
+    && rm -rf node_modules \
+    && mv .env.production .env
+     
+# EOF Run Composer
+
 # Chown
 RUN chown -R ${USER}:www-data ./* \
-    && chmod -R 0755 ./*
+    && chmod -R 0755 ./* \
+    && chmod -R 0775  ./storage \ 
+    && chmod -R 0775  ./bootstrap
 ### EOF BOOT APP
         
 EXPOSE ${PORT}
