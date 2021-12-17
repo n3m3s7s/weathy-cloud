@@ -143,7 +143,7 @@ RUN set -xe \
 # EOF Run Composer
 
 # Chown
-RUN chown -R ${USER}:www-data ./* \
+RUN chown -R ${USER}:www-data . \
     && chmod -R 0755 ./* \
     && chmod -R 0775  ./storage \ 
     && chmod -R 0775  ./bootstrap \
