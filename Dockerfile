@@ -138,7 +138,7 @@ RUN set -xe \
     && npm install \
     && npm run production \ 
     && rm -rf node_modules \
-    && mv .env.production .env
+    && mv .env.example .env
      
 # EOF Run Composer
 
