@@ -34,4 +34,4 @@ jobs:
           php_extensions: redis exif curl json mbstring pdo pdo_mysql zlib
           version: 2
           dev: no
-          args: --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
+          args: --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist --ignore-platform-reqs
