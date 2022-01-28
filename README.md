@@ -6,3 +6,4 @@
 
 ## Weathy
 A simple weather app build with laravel, vuejs, algolia places api and open-weather api.
+Hello world
